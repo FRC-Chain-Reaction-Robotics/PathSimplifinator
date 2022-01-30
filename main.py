@@ -4,7 +4,11 @@ import math
 def dist(x1, y1, x2, y2):
 	return math.sqrt(abs(y2-y1)**2 + abs(x2-x1)**2)
 
+
 def find_TTA(x1, y1, x2, y2, x3, y3):
+	"""
+	Uses the Southerland equation to find the necessary turn to angle in degrees.
+	"""
 	lx1 = x2-x1
 	lx2 = x3-x2
 	ly1 = y2-y1
