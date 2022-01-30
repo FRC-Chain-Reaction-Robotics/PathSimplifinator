@@ -1,34 +1,50 @@
 import csv
 import math
-filename = "C:\\Users\\Will Southerland\\OneDrive\\Documents\\New folder\\PathWeaver\\Paths\\Lowball.path"
 
-# initializing the titles and rows list
-fields = []
-rows = []
+def dist(x1, y1, x2, y2):
+	return math.sqrt(abs(y2-y1)**2 + abs(x2-x1)**2)
 
-# reading csv file
-with open(filename, 'r') as csvfile:
-	# creating a csv reader object
-	csvreader = csv.reader(csvfile)
+def find_TTA(x1, y1, x2, y2, x3, y3):
+	lx1 = x2-x1
+	lx2 = x3-x2
+	ly1 = y2-y1
+	ly2 = y3-y2
 	
-	# extracting field names through first row
-	fields = next(csvreader)
+	try: # jank
+		return math.degrees(math.acos(
+			(lx1*lx2 + ly1*ly2)
+			/ math.sqrt((lx1**2 + ly1**2) * (lx2**2 + ly2**2))
+		))
+	except:
+		return 0
 
-	# extracting each data row one by one
-	for row in csvreader:
-		rows.append(row)
+def main():
+	rows = []
 
-	# get total number of rows
-	print("Total no. of rows: %d"%(csvreader.line_num))
+	with open("Pathweaver/Paths/test.path", 'r') as csvfile:
+		csvreader = csv.reader(csvfile)
 
-# # printing the field names
-# print('Field names are:' + ', '.join(field for field in fields))
+		for row in list(csvreader):
+			rows.append(row)
 
-# # printing first 5 rows
-# print('\nFirst 5 rows are:\n')
-# for row in rows[:5]:
-# 	# parsing each column of a row
-# 	for col in row:
-# 		print("%10s"%col),
-# 	print('\n')
+	# ignoring the first line
+	rows = rows[1:]
+	rows.append(rows[-1])
 
+	if len(rows) == 2:
+		for i in range(len(rows)-1):
+			x1, y1 = float(rows[i][0]), float(rows[i][1])
+			x2, y2 = float(rows[i+1][0]), float(rows[i+1][1])
+
+			print(dist(x1, y1, x2, y2))
+	else:
+		for i in range(len(rows)-2):
+			x1, y1 = float(rows[i][0]), float(rows[i][1])
+			x2, y2 = float(rows[i+1][0]), float(rows[i+1][1])
+			x3, y3 = float(rows[i+2][0]), float(rows[i+2][1])
+
+			print("Drive", dist(x1, y1, x2, y2))
+			print("Turn", find_TTA(x1, y1, x2, y2, x3, y3))
+
+if __name__ == "__main__":
+	main()
